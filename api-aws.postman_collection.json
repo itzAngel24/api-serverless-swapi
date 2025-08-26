@@ -1,0 +1,267 @@
+{
+	"info": {
+		"_postman_id": "e190c357-0b4b-4e30-8cee-98bc4d0774ee",
+		"name": "demo-aws",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30634994"
+	},
+	"item": [
+		{
+			"name": "AWS",
+			"item": [
+				{
+					"name": "crear usuario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"angel\",\n    \"email\": \"itzangelbc@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/dev/almacenar",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"dev",
+								"almacenar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listar usuarios",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/dev/listarAlmacenados",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"dev",
+								"listarAlmacenados"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fusions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/dev/fusionados",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"dev",
+								"fusionados"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "crear fusion",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"10\",\n    \"name\": \"Obi-Wan Kenobi\",\n    \"height\": \"182\",\n    \"mass\": \"77\",\n    \"gender\": \"male\",\n    \"homeworld\": \"https://swapi.py4e.com/api/planets/20/\",\n    \"favoritequote\": \"Do what you're gonna do.\",\n    \"createdAt\": \"Sun Aug 24 2025\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/dev/fusion",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"dev",
+								"fusion"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "historial fusions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/dev/historial",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"dev",
+								"historial"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "local",
+			"item": [
+				{
+					"name": "listar usuarios",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/local/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"local",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "crear usuario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"name\": \"angel\",\n    \"email\": \"itzangelbc@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/local/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"local",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "people",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/local/swapi/people",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"local",
+								"swapi",
+								"people"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fusions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/local/fusionados",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"local",
+								"fusionados"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "quotes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/local/quoteapi/quotes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"local",
+								"quoteapi",
+								"quotes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": ""
+		}
+	]
+}

@@ -1,0 +1,234 @@
+service: users-api
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: ${opt:region, 'us-east-1'}
+  stage: ${opt:stage, 'dev'}
+  timeout: 30
+  memorySize: 256
+  
+  environment:
+    USERS_TABLE: ${self:service}-${self:provider.stage}-users
+    FUSIONS_TABLE: ${self:service}-${self:provider.stage}-fusions
+    REGION: ${self:provider.region}
+    STAGE: ${self:provider.stage}
+    SERVICE_NAME: ${self:service}
+    
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: 
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USERS_TABLE}"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USERS_TABLE}/index/*"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FUSIONS_TABLE}"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FUSIONS_TABLE}/index/*"
+
+functions:
+
+  createUser:
+    handler: src/handlers/index.createUser
+    events:
+      - http:
+          path: /almacenar
+          method: post
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false
+
+  getAllUsers:
+    handler: src/handlers/index.getAllUsers
+    events:
+      - http:
+          path: /listarAlmacenados
+          method: get
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false
+  
+  createFusion:
+    handler: src/handlers/fusion.createFusion
+    events:
+      - http:
+          path: /fusion
+          method: post
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false
+
+  getFusions:
+    handler: src/handlers/fusion.getFusions
+    events:
+      - http:
+          path: /fusionados
+          method: get
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false
+
+  getHistoryFusions:
+    handler: src/handlers/fusion.getHistoryFusions
+    events:
+      - http:
+          path: /historial
+          method: get
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false
+  
+  # getSWAPIPeople:
+  #   handler: src/handlers/swapi.getPeople
+  #   events:
+  #     - http:
+  #         path: swapi/people
+  #         method: get
+  #         cors: true
+  #   environment:
+  #     CACHE_TTL_MINUTES: 30
+
+  # getQuotes:
+  #   handler: src/handlers/quoteapi.getQuotes
+  #   events:
+  #     - http:
+  #         path: quoteapi/quotes
+  #         method: get
+  #         cors: true
+  #   environment:
+  #     CACHE_TTL_MINUTES: 30
+  
+  swaggerUI:
+    handler: src/handlers/swagger.swaggerUI
+    timeout: 6
+    events:
+      - http:
+          path: docs
+          method: get
+          cors: true
+          
+  swaggerJson:
+    handler: src/handlers/swagger.swaggerJson
+    timeout: 6
+    events:
+      - http:
+          path: swagger.json
+          method: get
+          cors: true
+          
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.USERS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: email
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        GlobalSecondaryIndexes:
+          - IndexName: email-index
+            KeySchema:
+              - AttributeName: email
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+        Tags:
+          - Key: Environment
+            Value: ${self:provider.stage}
+          - Key: Service
+            Value: ${self:service}
+    FusionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.FUSIONS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: createdAt
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        GlobalSecondaryIndexes:
+          - IndexName: createdAt-index
+            KeySchema:
+              - AttributeName: createdAt
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+        Tags:
+          - Key: Environment
+            Value: ${self:provider.stage}
+          - Key: Service
+            Value: ${self:service}
+
+plugins:
+  - serverless-esbuild
+  - serverless-offline
+
+custom:
+  esbuild:
+    bundle: true
+    minify: false 
+    sourcemap: true
+    target: node20
+    define:
+      'require.resolve': undefined
+    platform: node
+    concurrency: 10
+    exclude: ['aws-sdk']
+    
+  serverless-offline:
+    httpPort: 3000
+    host: localhost
+    stage: local

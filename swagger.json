@@ -1,0 +1,442 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Mi API",
+    "version": "1.0.0",
+    "description": "Documentación de mi API serverless"
+  },
+  "servers": [
+    {
+      "url": "{baseUrl}",
+      "description": "API Base URL",
+      "variables": {
+        "baseUrl": {
+          "default": "https://api.example.com",
+          "description": "Base URL del API"
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/listarAlmacenados": {
+      "get": {
+        "tags": ["Almacenados"],
+        "summary": "Listar almacenados",
+        "responses": {
+          "200": {
+            "description": "Lista de almacenados",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPaginationResult"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/almacenar": {
+      "post": {
+        "tags": ["Almacenados"],
+        "summary": "Crear almacenado",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuario creado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IUser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/fusionados": {
+      "get": {
+        "tags": ["Fusionados"],
+        "summary": "Listar fusionados",
+        "responses": {
+          "200": {
+            "description": "Lista de fusionados",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FusionPaginationResult"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/fusion": {
+      "post": {
+        "tags": ["Fusionados"],
+        "summary": "Crear fusion",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFusionData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Fusion creado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IFusion"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/historial": {
+      "get": {
+        "tags": ["Fusionados"],
+        "summary": "Listar historial de consultas de fusionados",
+        "responses": {
+          "200": {
+            "description": "Historial de fusionados",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FusionPaginationResult"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID único del usuario"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nombre del usuario"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email del usuario"
+          }
+        },
+        "required": ["id", "name", "email"],
+        "example": {
+          "id": "1",
+          "name": "angel",
+          "email": "correo1@gmail.com"
+        }
+      },
+      "IUser": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID único del usuario"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nombre del usuario"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email del usuario"
+          }
+        },
+        "required": ["id", "name", "email"],
+        "example": {
+          "id": "1",
+          "name": "angel",
+          "email": "correo1@gmail.com"
+        }
+      },
+      "CreateUser": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Nombre del usuario"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email del usuario"
+          }
+        },
+        "required": ["name", "email"],
+        "example": {
+          "name": "angel",
+          "email": "correo1@gmail.com"
+        }
+      },
+      "UserPaginationResult": {
+        "type": "object",
+        "properties": {
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IUser"
+            },
+            "description": "Lista de usuarios"
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "count": {
+                "type": "integer",
+                "description": "cantidad de usuarios"
+              },
+              "totalCount": {
+                "type": "integer",
+                "description": "cantidad total de usuarios"
+              },
+              "limit": {
+                "type": "integer",
+                "description": "limite"
+              },
+              "lastEvaluatedKey": {
+                "type": "string",
+                "description": "lastEvaluatedKey"
+              },
+              "hasMore": {
+                "type": "boolean",
+                "description": "tiene mas paginas"
+              }
+            },
+            "description": "paginacion"
+          }
+        }
+      },
+      "Fusion": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID único"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nombre"
+          },
+          "height": {
+            "type": "string",
+            "description": "Altura"
+          },
+          "mass": {
+            "type": "string",
+            "description": "Masa"
+          },
+          "gender": {
+            "type": "string",
+            "description": "Genero"
+          },
+          "homeworld": {
+            "type": "string",
+            "description": "Planeta natal"
+          },
+          "favoritequote": {
+            "type": "string",
+            "description": "Frase favorita"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Fecha de creación"
+          }
+        },
+        "required": ["id", "name", "height", "mass", "gender", "homeworld", "favoritequote", "createdAt"],
+        "example": {
+          "id": "10",
+          "name": "Obi-Wan Kenobi",
+          "height": "182",
+          "mass": "77",
+          "gender": "male",
+          "homeworld": "https://swapi.py4e.com/api/planets/20/",
+          "favoritequote": "Do what you're gonna do.",
+          "createdAt": "2025-08-24T12:00:00Z"
+        }
+      },
+      "CreateFusionData": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Nombre"
+          },
+          "height": {
+            "type": "string",
+            "description": "Altura"
+          },
+          "mass": {
+            "type": "string",
+            "description": "Masa"
+          },
+          "gender": {
+            "type": "string",
+            "description": "Genero"
+          },
+          "homeworld": {
+            "type": "string",
+            "description": "Planeta natal"
+          },
+          "favoritequote": {
+            "type": "string",
+            "description": "Frase favorita"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Fecha de creación"
+          }
+        },
+        "required": ["name", "height", "mass", "gender", "homeworld", "favoritequote", "createdAt"],
+        "example": {
+          "name": "Obi-Wan Kenobi",
+          "height": "182",
+          "mass": "77",
+          "gender": "male",
+          "homeworld": "https://swapi.py4e.com/api/planets/20/",
+          "favoritequote": "Do what you're gonna do.",
+          "createdAt": "2025-08-24T12:00:00Z"
+        }
+      },
+      "IFusion": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID único"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nombre"
+          },
+          "height": {
+            "type": "string",
+            "description": "Altura"
+          },
+          "mass": {
+            "type": "string",
+            "description": "Masa"
+          },
+          "gender": {
+            "type": "string",
+            "description": "Genero"
+          },
+          "homeworld": {
+            "type": "string",
+            "description": "Planeta natal"
+          },
+          "favoritequote": {
+            "type": "string",
+            "description": "Frase favorita"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Fecha de creación"
+          }
+        },
+        "required": ["id", "name", "height", "mass", "gender", "homeworld", "favoritequote", "createdAt"],
+        "example": {
+          "id": "10",
+          "name": "Obi-Wan Kenobi",
+          "height": "182",
+          "mass": "77",
+          "gender": "male",
+          "homeworld": "https://swapi.py4e.com/api/planets/20/",
+          "favoritequote": "Do what you're gonna do.",
+          "createdAt": "2025-08-24T12:00:00Z"
+        }
+      },
+      "FusionPaginationResult": {
+        "type": "object",
+        "properties": {
+          "fusions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IFusion"
+            },
+            "description": "Lista de fusionados"
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "count": {
+                "type": "integer",
+                "description": "cantidad de fusionados"
+              },
+              "totalCount": {
+                "type": "integer",
+                "description": "cantidad total de fusionados"
+              },
+              "limit": {
+                "type": "integer",
+                "description": "limite"
+              },
+              "lastEvaluatedKey": {
+                "type": "string",
+                "description": "lastEvaluatedKey"
+              },
+              "hasMore": {
+                "type": "boolean",
+                "description": "tiene mas paginas"
+              }
+            },
+            "description": "paginacion"
+          }
+        }
+      }
+    }
+  }
+}
