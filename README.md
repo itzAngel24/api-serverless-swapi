@@ -32,6 +32,7 @@ La API ya está desplegada y disponible en AWS. Puedes hacer peticiones directam
 #### Puedes revisar la documentacion y hacer uso de la API a traves del swagger
 
 **Swagger URL:** `https://n2vxk35woa.execute-api.us-east-1.amazonaws.com/dev/docs`
+**Postman collection: api-aws.postman_collection**
 
 ### Opción 2: Desplegar en tu Propia Cuenta de AWS
 
